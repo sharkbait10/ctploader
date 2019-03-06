@@ -42,6 +42,10 @@ var changeLanguages = () => {
             // console.log("channelResponse = " + JSON.stringify(response.body, undefined, 2))
             // console.log("statusCode = " + response.statusCode)
 
+            if(response.statusCode == 400){
+                reject(response)
+            }
+
             const body = {
                 version: response.body.version,
                 actions: [{
@@ -64,12 +68,20 @@ var changeLanguages = () => {
             }
 
             client.execute(createPostRequest).then(response => {
+
+                if(response.statusCode == 400){
+                    reject(response)
+                }
+
                 console.log('Adding the following languages:' + JSON.stringify(response.body.languages, undefined, 2))
                 // console.log("channelResponse = " + JSON.stringify(response.body, undefined, 2))
                 // console.log("statusCode = " + response.statusCode)
                 resolve(response)
+            }).catch((error) => {
+                console.log('ERROR: ' + error.message)
             })
         });
+
     });
 };
 

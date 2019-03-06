@@ -60,11 +60,17 @@ var changeCountries = (version) => {
         }
 
         client.execute(createPostRequest).then(response => {
+            if(response.statusCode == 400){
+                reject(response)
+            }
             console.log('Adding the following countries:' + JSON.stringify(response.body.countries, undefined, 2))
             // console.log("channelResponse = " + JSON.stringify(response.body, undefined, 2))
             // console.log("statusCode = " + response.statusCode)
             resolve(response)
+        }).catch((error) => {
+            console.log('ERROR: ' + error.message)
         })
+
     });
 };
 

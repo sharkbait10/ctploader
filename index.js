@@ -23,8 +23,11 @@ if (argv.e === 'all') {
     }).then((version) => {
         console.log('Setup of the countries')
         libs.countries.changeCountries(version);
+    }).then(() => {
+        console.log('Setup of the zones')
+        libs.zones.createZones()
     }).catch((error) => {
-        console.log(error);
+        console.log('ERROR: ' + error.message)
     });
 } else {
     console.log('puppa')
