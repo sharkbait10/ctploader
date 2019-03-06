@@ -36,35 +36,36 @@ const createGetRequest = {
     },
 }
 
-module.exports = function changeCountries() {
-    return client.execute(createGetRequest).then(response => {
-        console.log("channelResponse = " + JSON.stringify(response.body, undefined, 2))
-        console.log("statusCode = " + response.statusCode)
-        
-        // const body = {
-        //     version: response.body.version,
-        //     actions: [{
-        //         action: 'changeCountries',
-        //         countries: [
-        //             'BE',
-        //             'NL'
-        //         ]
-        //     }]
-        // }
-        // const createPostRequest = {
-        //     uri: service.build(),
-        //     method: 'POST',
-        //     body,
-        //     headers: {
-        //         Accept: 'application/json',
-        //         'Content-Type': 'application/json',
-        //     },
-        // }
-    
-        // client.execute(createPostRequest).then(response => {
-        //     console.log('Adding the following countries:' + JSON.stringify(response.body.countries, undefined, 2))
-        //     // console.log("channelResponse = " + JSON.stringify(response.body, undefined, 2))
-        //     // console.log("statusCode = " + response.statusCode)
-        // })
+var changeCountries = (version) => {
+    return new Promise((resolve, reject) => {
+
+        const body = {
+            version: version,
+            actions: [{
+                action: 'changeCountries',
+                countries: [
+                    'BE',
+                    'NL'
+                ]
+            }]
+        }
+        const createPostRequest = {
+            uri: service.build(),
+            method: 'POST',
+            body,
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        }
+
+        client.execute(createPostRequest).then(response => {
+            console.log('Adding the following countries:' + JSON.stringify(response.body.countries, undefined, 2))
+            // console.log("channelResponse = " + JSON.stringify(response.body, undefined, 2))
+            // console.log("statusCode = " + response.statusCode)
+            resolve(response)
+        })
     });
-}
+};
+
+exports.changeCountries = changeCountries;

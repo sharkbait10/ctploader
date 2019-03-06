@@ -15,19 +15,17 @@ const argv = yargs
 
 var libs = require('require-all')(__dirname + '/libs');
 
-if(argv.e === 'all') {
+if (argv.e === 'all') {
     console.log('--- Initialization started ---')
     console.log('Setup of the languages')
-    libs.languages((errorMessage,result) => {
-        if(errorMessage){
-            console.log('puppa1')
-        } else {
-            console.log('Setup of the countries')
-            libs.countries()
-        }
-    })
-    console.log('--- Initialization finished ---')
+    libs.languages.changeLanguages().then((res) => {
+        return res.body.version
+    }).then((version) => {
+        console.log('Setup of the countries')
+        libs.countries.changeCountries(version);
+    }).catch((error) => {
+        console.log(error);
+    });
 } else {
     console.log('puppa')
 }
-

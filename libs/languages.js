@@ -27,8 +27,6 @@ const client = createClient({
     middlewares: [authMiddleware, httpMiddleware, queueMiddleware],
 })
 
-let channelResponse;
-
 const createGetRequest = {
     uri: service.build(),
     method: 'GET',
@@ -38,37 +36,54 @@ const createGetRequest = {
     },
 }
 
-module.exports = function changeLanguages() {
-    return client.execute(createGetRequest).then(response => {
-        channelResponse = response.body
-        // console.log("channelResponse = " + JSON.stringify(response.body, undefined, 2))
-        // console.log("statusCode = " + response.statusCode)
-    
-        const body = {
-            version: channelResponse.version,
-            actions: [{
-                action: 'changeLanguages',
-                languages: [
-                    'en',
-                    'nl-NL',
-                    'nl-BE'
-                ]
-            }]
-        }
-        const createPostRequest = {
-            uri: service.build(),
-            method: 'POST',
-            body,
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        }
-    
-        client.execute(createPostRequest).then(response => {
-            console.log('Adding the following languages:' + JSON.stringify(response.body.languages, undefined, 2))
+var changeLanguages = () => {
+    return new Promise((resolve, reject) => {
+        client.execute(createGetRequest).then(response => {
             // console.log("channelResponse = " + JSON.stringify(response.body, undefined, 2))
             // console.log("statusCode = " + response.statusCode)
-        })
+
+            const body = {
+                version: response.body.version,
+                actions: [{
+                    action: 'changeLanguages',
+                    languages: [
+                        'en',
+                        'nl-NL',
+                        'nl-BE'
+                    ]
+                }]
+            }
+            const createPostRequest = {
+                uri: service.build(),
+                method: 'POST',
+                body,
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            }
+
+            client.execute(createPostRequest).then(response => {
+                console.log('Adding the following languages:' + JSON.stringify(response.body.languages, undefined, 2))
+                // console.log("channelResponse = " + JSON.stringify(response.body, undefined, 2))
+                // console.log("statusCode = " + response.statusCode)
+                resolve(response)
+            })
+        });
     });
-}
+};
+
+exports.changeLanguages = changeLanguages;
+
+
+// {
+//     "statusCode": 400,
+//     "message": "Request body does not contain valid JSON.",
+//     "errors": [
+//         {
+//             "code": "InvalidJsonInput",
+//             "message": "Request body does not contain valid JSON.",
+//             "detailedErrorMessage": "version: Missing required value"
+//         }
+//     ]
+// }
