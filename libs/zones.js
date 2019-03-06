@@ -1,31 +1,11 @@
-const {
-    createClient
-} = require('@commercetools/sdk-client')
-const {
-    createRequestBuilder
-} = require('@commercetools/api-request-builder')
-const {
-    createQueueMiddleware
-} = require('@commercetools/sdk-middleware-queue')
-var libs = require('require-all')(__dirname + '/../globals');
+var init = require('../libs/init')
+var libs = require('../globals/credentials')
 
-const projectKey = libs.credentials.projectKey;
+const projectKey = libs.projectKey;
 
-const service = createRequestBuilder({
+const service = init.createRequestBuilder({
     projectKey
 }).zones
-
-const authMiddleware = libs.credentials.authMiddleware;
-
-const httpMiddleware = libs.credentials.httpMiddleware;
-
-const queueMiddleware = createQueueMiddleware({
-    concurrency: 5,
-})
-
-const client = createClient({
-    middlewares: [authMiddleware, httpMiddleware, queueMiddleware],
-})
 
 const bodyBE = {
     name: 'Belgium',
@@ -47,7 +27,7 @@ const createPostRequestBE = {
 
 var createZones = () => {
     return new Promise((resolve, reject) => {
-        client.execute(createPostRequestBE).then(response => {
+        init.client.execute(createPostRequestBE).then(response => {
             console.log('Adding the Belgium zone');
             if (response.statusCode == 400) {
                 reject(response)
@@ -73,7 +53,7 @@ var createZones = () => {
                     },
                 }
 
-                client.execute(createPostRequestNL).then(response => {
+                init.client.execute(createPostRequestNL).then(response => {
                     if(response.statusCode == 400){
                         reject(response)
                     }

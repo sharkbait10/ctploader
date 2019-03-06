@@ -1,31 +1,11 @@
-const {
-    createClient
-} = require('@commercetools/sdk-client')
-const {
-    createRequestBuilder
-} = require('@commercetools/api-request-builder')
-const {
-    createQueueMiddleware
-} = require('@commercetools/sdk-middleware-queue')
-var libs = require('require-all')(__dirname + '/../globals');
+var init = require('../libs/init')
+var libs = require('../globals/credentials')
 
-const projectKey = libs.credentials.projectKey;
+const projectKey = libs.projectKey;
 
-const service = createRequestBuilder({
+const service = init.createRequestBuilder({
     projectKey
 }).project
-
-const authMiddleware = libs.credentials.authMiddleware;
-
-const httpMiddleware = libs.credentials.httpMiddleware;
-
-const queueMiddleware = createQueueMiddleware({
-    concurrency: 5,
-})
-
-const client = createClient({
-    middlewares: [authMiddleware, httpMiddleware, queueMiddleware],
-})
 
 const createGetRequest = {
     uri: service.build(),
@@ -38,7 +18,7 @@ const createGetRequest = {
 
 var changeLanguages = () => {
     return new Promise((resolve, reject) => {
-        client.execute(createGetRequest).then(response => {
+        init.client.execute(createGetRequest).then(response => {
             // console.log("channelResponse = " + JSON.stringify(response.body, undefined, 2))
             // console.log("statusCode = " + response.statusCode)
 
@@ -67,7 +47,7 @@ var changeLanguages = () => {
                 },
             }
 
-            client.execute(createPostRequest).then(response => {
+            init.client.execute(createPostRequest).then(response => {
 
                 if(response.statusCode == 400){
                     reject(response)
@@ -86,16 +66,3 @@ var changeLanguages = () => {
 };
 
 exports.changeLanguages = changeLanguages;
-
-
-// {
-//     "statusCode": 400,
-//     "message": "Request body does not contain valid JSON.",
-//     "errors": [
-//         {
-//             "code": "InvalidJsonInput",
-//             "message": "Request body does not contain valid JSON.",
-//             "detailedErrorMessage": "version: Missing required value"
-//         }
-//     ]
-// }
