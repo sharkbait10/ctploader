@@ -16,18 +16,11 @@ const createGetRequest = {
     },
 }
 
-var changeLanguages = () => {
+var changeLanguages = (version) => {
     return new Promise((resolve, reject) => {
-        init.client.execute(createGetRequest).then(response => {
-            // console.log("channelResponse = " + JSON.stringify(response.body, undefined, 2))
-            // console.log("statusCode = " + response.statusCode)
-
-            if(response.statusCode == 400){
-                reject(response)
-            }
-
+        
             const body = {
-                version: response.body.version,
+                version: version,
                 actions: [{
                     action: 'changeLanguages',
                     languages: [
@@ -62,7 +55,6 @@ var changeLanguages = () => {
             })
         });
 
-    });
 };
 
 exports.changeLanguages = changeLanguages;
