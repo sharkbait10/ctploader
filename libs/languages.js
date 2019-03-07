@@ -46,7 +46,7 @@ var changeLanguages = (version) => {
                     reject(response)
                 }
 
-                console.log('Adding the following languages:' + JSON.stringify(response.body.languages, undefined, 2))
+                // console.log('Adding the following languages:' + JSON.stringify(response.body.languages, undefined, 2))
                 // console.log("channelResponse = " + JSON.stringify(response.body, undefined, 2))
                 // console.log("statusCode = " + response.statusCode)
                 resolve(response)

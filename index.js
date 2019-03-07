@@ -31,7 +31,9 @@ if (argv.e === 'all') {
     }).then(() => {
         console.log('Setup of the tax categories')
         libs.taxes.createTaxCategoryVAT().then(() => {
-            libs.taxes.createTaxCategoryStandard()
+            libs.taxes.createTaxCategoryStandard().then(id => {
+                libs.shipping.createShippingMethod(id)
+            })
         })
     }).catch((error) => {
         console.log('ERROR: ' + error.message)
