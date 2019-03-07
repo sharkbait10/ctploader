@@ -6,7 +6,7 @@ const argv = yargs
             demand: false,
             alias: 'entities',
             describe: 'Run the script one time for all the entities or for separate entities',
-            choices: ['all', 'languages', 'countries', 'zones', 'taxes', 'shipping', 'channels', 'producttype'],
+            choices: ['all', 'languages', 'countries', 'zones', 'taxes', 'shipping', 'channels', 'producttype','products'],
             string: true
         }
     })
@@ -79,5 +79,11 @@ if (argv.e === 'all') {
 } else if (argv.e === 'producttype') {
     libs.productType.createProductType().catch((error) => {
         console.log('ERROR: ' + error.message)
+    });
+} else if (argv.e === 'products') {
+    libs.productType.getClothingProductType().then(id => {
+        libs.products.createDemoProducts(id)
+    }).catch((error) => {
+        console.log(error.message)
     });
 }

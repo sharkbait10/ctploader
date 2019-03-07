@@ -368,4 +368,42 @@ var createProductType = () => {
     });
 }
 
+const createGetRequest = {
+    uri: service.build(),
+    method: 'GET',
+    headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    }
+}
+
+var getProductTypes = () => {
+    return new Promise((resolve,reject) => {
+        init.client.execute(createGetRequest).then(response => {
+            if(response.statusCode == 400){
+                reject(response)
+            }
+            resolve(response)
+        }).catch((error) => {
+            console.log('ERROR: ' + error.message)
+        });
+    });
+}
+
+var getClothingProductType = () => {
+    return new Promise((resolve,reject) => {
+        getProductTypes().then(response => {
+            response.body.results.forEach(element => {
+                if(element.key === 'clothing'){
+                    resolve(element.id)
+                }
+            });
+            reject(response)
+        }).catch((error) => {
+            console.log('ERROR: ' + error.message)
+        });
+    });
+}
+
 exports.createProductType = createProductType;
+exports.getClothingProductType = getClothingProductType;
