@@ -223,7 +223,7 @@ var createTaxCategoryStandard = () => {
                         reject(response)
                     }
 
-                    resolve(response)
+                    resolve(id)
                 })
 
             })
@@ -233,6 +233,50 @@ var createTaxCategoryStandard = () => {
         })
     });
 };
+
+const createGetRequest = {
+    uri: service.build(),
+    method: 'GET',
+    headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    },
+}
+
+var getTaxCategories = () => {
+    return new Promise((resolve, reject) => {
+        init.client.execute(createGetRequest).then(response => {
+
+            if (response.statusCode == 400) {
+                reject(response)
+            }
+
+            resolve(response)
+
+        });
+
+    });
+};
+
+var getStandardTaxCategory = () => {
+    return new Promise((resolve, reject) => {
+        getTaxCategories().then((response) => {
+
+            response.body.results.forEach(element => {
+                if (element.name === 'Standard shipping') {
+                    resolve(element.id)
+                }
+            });
+
+            reject(response)
+        }).catch((error) => {
+            console.log('ERROR: ' + error.message)
+        })
+    });
+}
+
+exports.getStandardTaxCategory = getStandardTaxCategory;
+
 
 exports.createTaxCategoryVAT = createTaxCategoryVAT;
 exports.createTaxCategoryStandard = createTaxCategoryStandard;
