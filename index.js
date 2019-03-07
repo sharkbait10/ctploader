@@ -6,7 +6,7 @@ const argv = yargs
             demand: false,
             alias: 'entities',
             describe: 'Run the script one time for all the entities or for separate entities',
-            choices: ['all', 'l', 'c', 'z'],
+            choices: ['all', 'l', 'c', 'z', 't'],
             string: true
         }
     })
@@ -28,6 +28,11 @@ if (argv.e === 'all') {
     }).then(() => {
         console.log('Setup of the zones')
         libs.zones.createZones()
+    }).then(() => {
+        console.log('Setup of the tax categories')
+        libs.taxes.createTaxCategoryVAT().then(() => {
+            libs.taxes.createTaxCategoryStandard()
+        })
     }).catch((error) => {
         console.log('ERROR: ' + error.message)
     });
@@ -45,6 +50,12 @@ if (argv.e === 'all') {
     });
 } else if (argv.e === 'z') {
     libs.zones.createZones().catch((error) => {
+        console.log('ERROR: ' + error.message)
+    });
+} else if (argv.e === 't') {
+    libs.taxes.createTaxCategoryVAT().then(() => {
+        libs.taxes.createTaxCategoryStandard()
+    }).catch((error) => {
         console.log('ERROR: ' + error.message)
     });
 }
