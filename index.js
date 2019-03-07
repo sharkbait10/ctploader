@@ -6,7 +6,7 @@ const argv = yargs
             demand: false,
             alias: 'entities',
             describe: 'Run the script one time for all the entities or for separate entities',
-            choices: ['all', 'l', 'c', 'z', 't'],
+            choices: ['all', 'languages', 'countries', 'zones', 'taxes', 'shipping'],
             string: true
         }
     })
@@ -36,25 +36,31 @@ if (argv.e === 'all') {
     }).catch((error) => {
         console.log('ERROR: ' + error.message)
     });
-} else if (argv.e === 'l') {
+} else if (argv.e === 'languages') {
     libs.project.getProject().then((version) => {
         libs.languages.changeLanguages(version).catch((error) => {
             console.log('ERROR: ' + error.message)
         });
     });
-} else if (argv.e === 'c') {
+} else if (argv.e === 'countries') {
     libs.project.getProject().then((version) => {
         libs.countries.changeCountries(version).catch((error) => {
             console.log('ERROR: ' + error.message)
         });
     });
-} else if (argv.e === 'z') {
+} else if (argv.e === 'zones') {
     libs.zones.createZones().catch((error) => {
         console.log('ERROR: ' + error.message)
     });
-} else if (argv.e === 't') {
+} else if (argv.e === 'taxes') {
     libs.taxes.createTaxCategoryVAT().then(() => {
         libs.taxes.createTaxCategoryStandard()
+    }).catch((error) => {
+        console.log('ERROR: ' + error.message)
+    });
+} else if (argv.e === 'shipping') {
+    libs.taxes.getStandardTaxCategory().then((id) => {
+        libs.shipping.createShippingMethod(id)
     }).catch((error) => {
         console.log('ERROR: ' + error.message)
     });

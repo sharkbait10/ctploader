@@ -46,8 +46,6 @@ var createTaxCategoryVAT = () => {
 
             version = response.body.version;
             id = response.body.id;
-            console.log(version)
-            console.log(id)
 
             const serviceVAT = init.createRequestBuilder({
                 projectKey
@@ -85,8 +83,6 @@ var createTaxCategoryVAT = () => {
                 }
 
                 version = response.body.version;
-                console.log(version)
-                console.log(id)
 
                 const serviceVAT = init.createRequestBuilder({
                     projectKey
@@ -146,8 +142,6 @@ var createTaxCategoryStandard = () => {
 
             version = response.body.version;
             id = response.body.id;
-            console.log(version)
-            console.log(id)
 
             const serviceStandard = init.createRequestBuilder({
                 projectKey
@@ -185,8 +179,6 @@ var createTaxCategoryStandard = () => {
                 }
 
                 version = response.body.version;
-                console.log(version)
-                console.log(id)
 
                 const serviceStandard = init.createRequestBuilder({
                     projectKey
