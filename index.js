@@ -41,6 +41,9 @@ if (argv.e === 'all') {
     }).then(() => {
         console.log('Setup of the product type')
         libs.productType.createProductType()
+    }).then(() => {
+        console.log('Setup of the categories')
+        libs.categories.createCategories()
     }).catch((error) => {
         console.log('ERROR: ' + error.message)
     });
