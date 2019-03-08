@@ -7,15 +7,6 @@ const service = init.createRequestBuilder({
     projectKey
 }).project
 
-const createGetRequest = {
-    uri: service.build(),
-    method: 'GET',
-    headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-    },
-}
-
 var changeLanguages = (version) => {
     return new Promise((resolve, reject) => {
         
@@ -49,7 +40,7 @@ var changeLanguages = (version) => {
                 // console.log('Adding the following languages:' + JSON.stringify(response.body.languages, undefined, 2))
                 // console.log("channelResponse = " + JSON.stringify(response.body, undefined, 2))
                 // console.log("statusCode = " + response.statusCode)
-                resolve(response)
+                resolve(response.body.version)
             }).catch((error) => {
                 console.log('ERROR: ' + error.message)
             })

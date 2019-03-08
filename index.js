@@ -18,13 +18,12 @@ var libs = require('require-all')(__dirname + '/libs');
 
 if (argv.e === 'all') {
     console.log('--- Initialization started ---')
-    libs.project.getProject().then((version) => {
+    libs.project.getProject().then(version => {
         console.log('Setup of the languages')
-        libs.languages.changeLanguages(version)
-        return version
-    }).then((version) => {
-        console.log('Setup of the countries')
-        libs.countries.changeCountries(version);
+        libs.languages.changeLanguages(version).then(newversion => {
+            console.log('Setup of the countries')
+            libs.countries.changeCountries(newversion)
+        })
     }).then(() => {
         console.log('Setup of the zones')
         libs.zones.createZones()
