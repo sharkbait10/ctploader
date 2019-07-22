@@ -16,6 +16,17 @@ const createGetRequest = {
     },
 }
 
+async function getProjectAsync() {
+  let response = await init.client.execute(createGetRequest);
+  if(response.statusCode == 400) {
+    return response;
+  } else {
+    return response.body.version;
+  }
+}
+
+exports.getProjectAsync = getProjectAsync;
+
 var getProject = () => {
     return new Promise((resolve, reject) => {
         init.client.execute(createGetRequest).then(response => {

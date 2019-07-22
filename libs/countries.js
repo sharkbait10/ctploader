@@ -7,6 +7,33 @@ const service = init.createRequestBuilder({
     projectKey
 }).project
 
+async function changeCountriesAsync(version) {
+  const body = {
+      version: version,
+      actions: [{
+          action: 'changeCountries',
+          countries: [
+              'BE',
+              'NL'
+          ]
+      }]
+  }
+  const createPostRequest = {
+      uri: service.build(),
+      method: 'POST',
+      body,
+      headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+      },
+  }
+
+  let response = await init.client.execute(createPostRequest);
+  return response;
+}
+
+exports.changeCountriesAsync = changeCountriesAsync;
+
 var changeCountries = (version) => {
     return new Promise((resolve, reject) => {
 

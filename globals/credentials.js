@@ -3,16 +3,16 @@ const { createAuthMiddlewareForClientCredentialsFlow } = require('@commercetools
 const { createHttpMiddleware } = require('@commercetools/sdk-middleware-http')
 const fetch = require('node-fetch')
 
-const projectKey = 'ire-test1-14'
+const projectKey = 'testirene'
 
 const authMiddleware = createAuthMiddlewareForClientCredentialsFlow({
   host: 'https://auth.sphere.io',
   projectKey,
   credentials: {
-    clientId: '8VZ_Qh-3nTqUQSCrJWUhb_zJ',
-    clientSecret: 'LxeU03cPCsncZ12Kepgut1hIx6XpZ8Sy',
+    clientId: 'U-5ljWnkjTBAWj50GLvEh2s-',
+    clientSecret: '3ILaQh0OXbKlercaSNxm9p1z4-73jDBy',
   },
-  scopes: ['manage_project:ire-test1-14 view_api_clients:ire-test1-14 manage_api_clients:ire-test1-14'],
+  scopes: ['manage_project:testirene view_api_clients:testirene manage_api_clients:testirene'],
   fetch,
 })
 const httpMiddleware = createHttpMiddleware({
