@@ -6,7 +6,7 @@ const argv = yargs
             demand: false,
             alias: 'entities',
             describe: 'Run the script one time for all the entities or for separate entities',
-            choices: ['all', 'languages', 'countries', 'zones', 'taxes', 'shipping', 'channels', 'producttype','products', 'categories'],
+            choices: ['all', 'languages', 'countries', 'zones', 'currencies', 'taxes', 'shipping', 'channels', 'producttype','products', 'categories'],
             string: true
         }
     })
@@ -36,6 +36,19 @@ async function loadInitialDataOnCommercetools(argv) {
   } else if (argv.e === 'zones') {
     try {
       await libs.zones.createZonesAsync();
+    } catch (e) {
+      console.log(e.message);
+    }
+  } else if (argv.e === 'currencies') {
+    try {
+      let projectVersion = await libs.project.getProjectAsync();
+      await libs.currencies.createCurrenciesAsync(projectVersion);
+    } catch (e) {
+      console.log(e.message);
+    }
+  } else if (argv.e === 'taxes') {
+    try {
+      await libs.taxes.createTaxCategoryAsync();
     } catch (e) {
       console.log(e.message);
     }
