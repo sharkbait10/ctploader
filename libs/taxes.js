@@ -256,15 +256,24 @@ exports.createTaxCategoryAsync = createTaxCategoryAsync;
 //     });
 // };
 //
-// const createGetRequest = {
-//     uri: service.build(),
-//     method: 'GET',
-//     headers: {
-//         Accept: 'application/json',
-//         'Content-Type': 'application/json',
-//     },
-// }
-//
+const createGetRequest = {
+    uri: service.build(),
+    method: 'GET',
+    headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    },
+}
+
+async function getTaxCategoriesAsync() {
+  try {
+    let response = await init.client.execute(createGetRequest);
+    return response;
+  } catch (e) {
+    console.log(e.message);
+  }
+}
+
 // var getTaxCategories = () => {
 //     return new Promise((resolve, reject) => {
 //         init.client.execute(createGetRequest).then(response => {
@@ -279,7 +288,22 @@ exports.createTaxCategoryAsync = createTaxCategoryAsync;
 //
 //     });
 // };
-//
+
+async function getStandardTaxCategoryAsync() {
+  try {
+    let response = await getTaxCategoriesAsync();
+    response.body.results.forEach(element => {
+      if(element.name === 'standard'){
+        return element.id;
+      }
+    });
+  } catch (e) {
+    console.log(e.message);
+  }
+}
+
+exports.getStandardTaxCategoryAsync = getStandardTaxCategoryAsync;
+
 // var getStandardTaxCategory = () => {
 //     return new Promise((resolve, reject) => {
 //         getTaxCategories().then((response) => {
@@ -296,7 +320,7 @@ exports.createTaxCategoryAsync = createTaxCategoryAsync;
 //         })
 //     });
 // }
-//
+
 // exports.getStandardTaxCategory = getStandardTaxCategory;
 //
 //

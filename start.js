@@ -52,5 +52,15 @@ async function loadInitialDataOnCommercetools(argv) {
     } catch (e) {
       console.log(e.message);
     }
+  } else if (argv.e === 'shipping') {
+    try {
+      let standardTaxCategoryId = await libs.taxes.getStandardTaxCategoryAsync();
+      console.log((standardTaxCategoryId));
+      let zoneId = await libs.zones.getZoneAsync();
+      console.log(zoneId);
+      await libs.shipping.createShippingMethodAsync(standardTaxCategoryId, zoneId);
+    } catch (e) {
+      console.log(e.message);
+    }
   }
 }

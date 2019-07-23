@@ -36,6 +36,27 @@ async function createZonesAsync() {
 
 exports.createZonesAsync = createZonesAsync;
 
+const createGetRequest = {
+  uri: service.build(),
+  method: 'GET',
+  headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+  },
+}
+
+async function getZoneAsync() {
+  try {
+    let response = await init.client.execute(createGetRequest);
+    console.log(response.body.results[0].id);
+    return response.body.results[0].id;
+  } catch (e) {
+    console.log(e.message);
+  }
+}
+
+exports.getZoneAsync = getZoneAsync;
+
 // var createZones = () => {
 //     return new Promise((resolve, reject) => {
 //         init.client.execute(createPostRequestBE).then(response => {
