@@ -31,8 +31,6 @@ async function createShippingMethodAsync(standardTaxCategoryId, zoneId) {
       isDefault: true
   }
 
-  console.log(body);
-
   const createPostRequest = {
       uri: service.build(),
       method: 'POST',

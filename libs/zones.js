@@ -48,7 +48,6 @@ const createGetRequest = {
 async function getZoneAsync() {
   try {
     let response = await init.client.execute(createGetRequest);
-    console.log(response.body.results[0].id);
     return response.body.results[0].id;
   } catch (e) {
     console.log(e.message);

@@ -292,11 +292,11 @@ async function getTaxCategoriesAsync() {
 async function getStandardTaxCategoryAsync() {
   try {
     let response = await getTaxCategoriesAsync();
-    response.body.results.forEach(element => {
-      if(element.name === 'standard'){
-        return element.id;
+    for(let i=0; i<response.body.results.length; i++) {
+      if(response.body.results[i].name === 'standard') {
+        return response.body.results[i].id;
       }
-    });
+    }
   } catch (e) {
     console.log(e.message);
   }
