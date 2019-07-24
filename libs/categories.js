@@ -235,7 +235,6 @@ async function createCategories() {
   try {
     await createDiscountsCategory();
     let webCategoryId = await createWebCategory();
-    console.log(webCategoryId);
     await createOpticalCategory(webCategoryId);
     await createSunglassesCategory(webCategoryId);
     await createContactLensesCategory(webCategoryId);

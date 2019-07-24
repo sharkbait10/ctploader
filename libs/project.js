@@ -4,42 +4,25 @@ var libs = require('../globals/credentials')
 const projectKey = libs.projectKey;
 
 const service = init.createRequestBuilder({
-    projectKey
+  projectKey
 }).project
 
 const createGetRequest = {
-    uri: service.build(),
-    method: 'GET',
-    headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-    },
+  uri: service.build(),
+  method: 'GET',
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  },
 }
 
 async function getProjectAsync() {
-  let response = await init.client.execute(createGetRequest);
-  if(response.statusCode == 400) {
+  try {
+    let response = await init.client.execute(createGetRequest);
     return response;
-  } else {
-    return response.body.version;
+  } catch (e) {
+    console.log(e.message);
   }
 }
 
 exports.getProjectAsync = getProjectAsync;
-
-var getProject = () => {
-    return new Promise((resolve, reject) => {
-        init.client.execute(createGetRequest).then(response => {
-
-            if(response.statusCode == 400){
-                reject(response)
-            }
-
-            resolve(response.body.version)
-
-        });
-
-    });
-};
-
-exports.getProject = getProject;

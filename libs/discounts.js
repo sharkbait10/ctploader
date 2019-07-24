@@ -100,6 +100,49 @@ async function createContactLensesProductDiscount(contactLensesCategoryId) {
   }
 }
 
+async function createNHSProductDiscount() {
+  const bodyNHS = {
+  value: {
+    type: 'absolute',
+    money: [
+      {
+        type: 'centPrecision',
+        currencyCode: 'EUR',
+        centAmount: 9100,
+        fractionDigits: 2
+      }
+    ]
+  },
+  predicate: 'sku = "6921103616407"',
+  name: {
+    en: 'NHS'
+  },
+  description: {
+    en: 'NHS'
+  },
+  isActive: true,
+  sortOrder: '0.999',
+  references: [],
+  attributeTypes: {}
+}
+
+  const createNHSPostRequest = {
+    uri: service.build(),
+    method: 'POST',
+    body: bodyNHS,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  }
+
+  try {
+    await init.client.execute(createNHSPostRequest);
+  } catch (e) {
+    console.log(e.message);
+  }
+}
+
 async function create10EURCartDiscount() {
   const body10EUR = {
     value: {
@@ -260,11 +303,10 @@ async function createProductDiscounts() {
   try {
     console.log('Crating product discounts');
     let sunglassesCategoryId = await getCategoryIdFromKey('sunglasses');
-    console.log(sunglassesCategoryId);
     await createVEExclusiveProductDiscount(sunglassesCategoryId);
     let contactLensesCategoryId = await getCategoryIdFromKey('lenses');
-    console.log(contactLensesCategoryId);
     await createContactLensesProductDiscount(contactLensesCategoryId);
+    await createNHSProductDiscount();
   } catch (e) {
     console.log(e.message);
   }
