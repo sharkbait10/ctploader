@@ -4,53 +4,71 @@ var libs = require('../globals/credentials')
 const projectKey = libs.projectKey;
 
 const service = init.createRequestBuilder({
-  projectKey
+    projectKey
 }).zones
 
-const body = {
-  name: 'Zone',
-  description: '',
-  locations: [{
-    country: 'IE',
-    state: ''
-  }]
+const bodyBE = {
+    name: 'Belgium',
+    description: '',
+    locations: [{
+        country: 'BE',
+        state: ''
+    }]
 }
-const createPostRequest = {
-  uri: service.build(),
-  method: 'POST',
-  body: body,
-  headers: {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  },
-}
-
-async function createZonesAsync() {
-  try {
-    await init.client.execute(createPostRequest);
-  } catch (e) {
-    console.log(e.message);
-  }
+const createPostRequestBE = {
+    uri: service.build(),
+    method: 'POST',
+    body: bodyBE,
+    headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    },
 }
 
-exports.createZonesAsync = createZonesAsync;
+var createZones = () => {
+    return new Promise((resolve, reject) => {
+        init.client.execute(createPostRequestBE).then(response => {
+            console.log('Adding the Belgium zone');
+            if (response.statusCode == 400) {
+                reject(response)
+            }
 
-const createGetRequest = {
-  uri: service.build(),
-  method: 'GET',
-  headers: {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  },
-}
 
-async function getZoneAsync() {
-  try {
-    let response = await init.client.execute(createGetRequest);
-    return response.body.results[0].id;
-  } catch (e) {
-    console.log(e.message);
-  }
-}
+                const bodyNL = {
+                    name: 'Netherlands',
+                    description: '',
+                    locations: [{
+                        country: 'NL',
+                        state: ''
+                    }
+                    ]
+                }
+                const createPostRequestNL = {
+                    uri: service.build(),
+                    method: 'POST',
+                    body: bodyNL,
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                }
 
-exports.getZoneAsync = getZoneAsync;
+                init.client.execute(createPostRequestNL).then(response => {
+                    if(response.statusCode == 400){
+                        reject(response)
+                    }
+                    console.log('Adding the Netherlands zone');
+                    resolve(response)
+                }).catch((error) => {
+                    console.log('ERROR: ' + error.message)
+                })
+
+            
+        }).catch((error) => {
+            console.log('ERROR: ' + error.message)
+        });
+
+    });
+};
+
+exports.createZones = createZones;

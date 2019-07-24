@@ -7,28 +7,42 @@ const service = init.createRequestBuilder({
     projectKey
 }).project
 
-async function changeCountriesAsync(version) {
-  const body = {
-      version: version,
-      actions: [{
-          action: 'changeCountries',
-          countries: [
-              'IE'
-          ]
-      }]
-  }
-  const createPostRequest = {
-      uri: service.build(),
-      method: 'POST',
-      body,
-      headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-      },
-  }
+var changeCountries = (version) => {
+    return new Promise((resolve, reject) => {
 
-  let response = await init.client.execute(createPostRequest);
-  return response;
-}
+        const body = {
+            version: version,
+            actions: [{
+                action: 'changeCountries',
+                countries: [
+                    'BE',
+                    'NL'
+                ]
+            }]
+        }
+        const createPostRequest = {
+            uri: service.build(),
+            method: 'POST',
+            body,
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        }
 
-exports.changeCountriesAsync = changeCountriesAsync;
+        init.client.execute(createPostRequest).then(response => {
+            if(response.statusCode == 400){
+                reject(response)
+            }
+            // console.log('Adding the following countries:' + JSON.stringify(response.body.countries, undefined, 2))
+            // console.log("channelResponse = " + JSON.stringify(response.body, undefined, 2))
+            // console.log("statusCode = " + response.statusCode)
+            resolve(response)
+        }).catch((error) => {
+            console.log('ERROR: ' + error.message)
+        })
+
+    });
+};
+
+exports.changeCountries = changeCountries;

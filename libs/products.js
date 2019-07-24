@@ -5,24 +5,28 @@ const projectKey = libs.projectKey;
 
 const service = init.createRequestBuilder({
     projectKey
-}).shippingMethods
+}).products
 
-var createShippingMethod = (standardTaxCategoryId) => {
+
+
+var createDemoProducts = (productTypeId) => {
     return new Promise((resolve, reject) => {
 
         const body = {
-            name: 'Standard shipping method',
-            key: 'standard_shipping_method',
-            description: 'Standard shipping method',
-            taxCategory: {
-                id: standardTaxCategoryId,
-                typeId: 'tax-category'
+            name: {
+                en: 'Demo Shirt Garcia A91025 MEN'
             },
-            zoneRates: [],
-            isDefault: true
+            productType: {
+                id: productTypeId,
+                type: 'product-type'
+            },
+            slug: {
+                en: 'demo_shirt'
+            },
+            publish: true
         }
 
-        const createPostRequest = {
+        var createPostRequest = {
             uri: service.build(),
             method: 'POST',
             body,
@@ -32,15 +36,17 @@ var createShippingMethod = (standardTaxCategoryId) => {
             },
         }
 
+        console.log(productTypeId)
+
         init.client.execute(createPostRequest).then(response => {
             if (response.statusCode == 400) {
                 reject(response)
             }
-
-            console.log('Created a new standard shipping method')
             resolve(response)
-        });
+        }).catch((error) => {
+            console.log('ERROR: ' + error.message)
+        })
     });
 }
 
-exports.createShippingMethod = createShippingMethod;
+exports.createDemoProducts = createDemoProducts;
