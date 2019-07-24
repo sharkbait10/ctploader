@@ -122,7 +122,6 @@ async function loadInitialDataOnCommercetools(argv) {
     console.log('Creating discounts');
     await libs.discounts.createProductDiscounts();
     let happySummerId = await libs.discounts.createCartDiscounts();
-    console.log(happySummerId);
     await libs.discounts.createDiscountCodes(happySummerId);
 
     console.log('Creating product types');
