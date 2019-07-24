@@ -26,42 +26,46 @@ let version = '';
 let id = '';
 
 async function createTaxCategoryAsync() {
-  let response = await init.client.execute(createPostRequest);
+  try {
+    let response = await init.client.execute(createPostRequest);
 
-  version = response.body.version;
-  id = response.body.id;
+    version = response.body.version;
+    id = response.body.id;
 
-  const service = init.createRequestBuilder({
-      projectKey
-  }).taxCategories.byId(id)
+    const service = init.createRequestBuilder({
+        projectKey
+    }).taxCategories.byId(id)
 
-  const bodyStandardRate = {
-      version: version,
-      actions: [{
-          action: 'addTaxRate',
-          taxRate: {
-              name: 'standard',
-              amount: 0.2,
-              includedInPrice: true,
-              country: 'IE',
-              state: ''
-          }
-      }]
+    const bodyStandardRate = {
+        version: version,
+        actions: [{
+            action: 'addTaxRate',
+            taxRate: {
+                name: 'standard',
+                amount: 0.2,
+                includedInPrice: true,
+                country: 'IE',
+                state: ''
+            }
+        }]
+    }
+
+    const createPostRequestStandardRate = {
+        uri: service.build(),
+        method: 'POST',
+        body: bodyStandardRate,
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+    }
+
+    console.log('Adding the standard tax category rate');
+
+    await init.client.execute(createPostRequestStandardRate);
+  } catch (e) {
+    console.log(e.message);
   }
-
-  const createPostRequestStandardRate = {
-      uri: service.build(),
-      method: 'POST',
-      body: bodyStandardRate,
-      headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-      },
-  }
-
-  console.log('Adding the standard tax category rate');
-
-  await init.client.execute(createPostRequestStandardRate);
 }
 
 exports.createTaxCategoryAsync = createTaxCategoryAsync;

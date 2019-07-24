@@ -24,8 +24,11 @@ const createPostRequest = {
 }
 
 async function createChannelAsync() {
-  console.log('Creating a new channel');
-  await init.client.execute(createPostRequest);
+  try {
+    await init.client.execute(createPostRequest);
+  } catch (e) {
+    console.log(e.message);
+  }
 }
 
 exports.createChannelAsync = createChannelAsync;
