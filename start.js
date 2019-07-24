@@ -6,7 +6,7 @@ const argv = yargs
             demand: false,
             alias: 'entities',
             describe: 'Run the script one time for all the entities or for separate entities',
-            choices: ['all', 'languages', 'countries', 'zones', 'currencies', 'taxes', 'shipping', 'channels', 'producttype','products', 'categories'],
+            choices: ['all', 'languages', 'countries', 'zones', 'currencies', 'taxes', 'shipping', 'channels', 'producttype','products', 'categories', 'discounts'],
             string: true
         }
     })
@@ -57,6 +57,27 @@ async function loadInitialDataOnCommercetools(argv) {
       let standardTaxCategoryId = await libs.taxes.getStandardTaxCategoryAsync();
       let zoneId = await libs.zones.getZoneAsync();
       await libs.shipping.createShippingMethodAsync(standardTaxCategoryId, zoneId);
+    } catch (e) {
+      console.log(e.message);
+    }
+  } else if (argv.e === 'channels') {
+    try {
+      await libs.channels.createChannelAsync();
+    } catch (e) {
+      console.log(e.message);
+    }
+  } else if (argv.e === 'discounts') {
+    try {
+      await libs.discounts.createProductDiscounts();
+      let happySummerId = await libs.discounts.createCartDiscounts();
+      console.log(happySummerId);
+      await libs.discounts.createDiscountCodes(happySummerId);
+    } catch (e) {
+      console.log(e.message);
+    }
+  } else if (argv.e === 'categories') {
+    try {
+      await libs.categories.createCategories();
     } catch (e) {
       console.log(e.message);
     }
