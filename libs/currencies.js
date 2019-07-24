@@ -7,28 +7,32 @@ const service = init.createRequestBuilder({
     projectKey
 }).project
 
-async function changeCountriesAsync(version) {
+async function createCurrenciesAsync(version) {
+
   const body = {
       version: version,
       actions: [{
-          action: 'changeCountries',
-          countries: [
-              'IE'
+          action: 'changeCurrencies',
+          currencies: [
+              'EUR'
           ]
       }]
   }
   const createPostRequest = {
       uri: service.build(),
       method: 'POST',
-      body,
+      body: body,
       headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
       },
   }
 
-  let response = await init.client.execute(createPostRequest);
-  return response;
+  try {
+    await init.client.execute(createPostRequest);
+  } catch (e) {
+    console.log(e.message);
+  }
 }
 
-exports.changeCountriesAsync = changeCountriesAsync;
+exports.createCurrenciesAsync = createCurrenciesAsync;

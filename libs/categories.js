@@ -4,326 +4,243 @@ var libs = require('../globals/credentials')
 const projectKey = libs.projectKey;
 
 const service = init.createRequestBuilder({
-    projectKey
+  projectKey
 }).categories
 
-var createGranfatherCategory = () => {
-    return new Promise((resolve, reject) => {
-
-        const body = {
-            name: {
-                en: 'heren'
-            },
-            slug: {
-                en: 'heren'
-            },
-            key: 'heren'
-        }
-
-        const createPostRequest = {
-            uri: service.build(),
-            method: 'POST',
-            body,
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        }
-
-        init.client.execute(createPostRequest).then(response => {
-            if (response.statusCode == 400) {
-                reject(response)
-            }
-
-            console.log('Created a new category')
-            resolve(response.body.id)
-        });
-    });
+const bodyDiscountsCategory = {
+  name: {
+    "en-IE": "Discounts"
+  },
+  slug: {
+    "en-IE": "discounts"
+  },
+  description: {
+    "en-IE": "Discounts"
+  },
+  orderHint: "0.2",
+  ancestors: []
 }
 
-var createCategory = (parentId) => {
-    return new Promise((resolve, reject) => {
-        const body = {
-            name: {
-                en: 'heren-jeans'
-            },
-            slug: {
-                en: 'heren-jeans'
-            },
-            key: 'heren-jeans'
-        }
-        
-        const createPostRequest = {
-            uri: service.build(),
-            method: 'POST',
-            body,
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        }
-
-        init.client.execute(createPostRequest).then(response => {
-            if (response.statusCode == 400) {
-                reject(response)
-            }
-
-            console.log('Created a new category')
-
-            const bodyParent = {
-                version: response.body.version,
-                actions: [{
-                    action: 'changeParent',
-                    parent: {
-                        typeId: 'category',
-                        id: parentId
-                    }
-                }]
-            }
-
-            const serviceParent = init.createRequestBuilder({
-                projectKey
-            }).categories.byId(response.body.id)
-
-            const createParentPostRequest = {
-                uri: serviceParent.build(),
-                method: 'POST',
-                body: bodyParent,
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-            }
-
-            init.client.execute(createParentPostRequest).then(reseponse => {
-                if(response.statusCode == 400) {
-                    reject(response)
-                }
-
-                resolve(response.body.id)
-            });
-
-        });
-    });
+const createDiscountsCategoryPostRequest = {
+  uri: service.build(),
+  method: 'POST',
+  body: bodyDiscountsCategory,
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  },
 }
 
-var createKidCategory = (parentId) => {
-    return new Promise((resolve, reject) => {
-        const body = {
-            name: {
-                en: 'heren-skinny-fit'
-            },
-            slug: {
-                en: 'heren-skinny-fit'
-            },
-            key: 'heren-skinny-fit'
-        }
-        
-        const createPostRequest = {
-            uri: service.build(),
-            method: 'POST',
-            body,
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        }
-
-        init.client.execute(createPostRequest).then(response => {
-            if (response.statusCode == 400) {
-                reject(response)
-            }
-
-            console.log('Created a new category')
-
-            const bodyParent = {
-                version: response.body.version,
-                actions: [{
-                    action: 'changeParent',
-                    parent: {
-                        typeId: 'category',
-                        id: parentId
-                    }
-                }]
-            }
-
-            const serviceParent = init.createRequestBuilder({
-                projectKey
-            }).categories.byId(response.body.id)
-
-            const createParentPostRequest = {
-                uri: serviceParent.build(),
-                method: 'POST',
-                body: bodyParent,
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-            }
-
-            init.client.execute(createParentPostRequest).then(reseponse => {
-                if(response.statusCode == 400) {
-                    reject(response)
-                }
-
-                resolve(response)
-            });
-        });
-    });
+async function createDiscountsCategory() {
+  try {
+    await init.client.execute(createDiscountsCategoryPostRequest);
+  } catch (e) {
+    console.log(e.message);
+  }
 }
 
-var createCategoryShirt = (parentId) => {
-    return new Promise((resolve, reject) => {
-        const body = {
-            name: {
-                en: 'heren-clothing'
-            },
-            slug: {
-                en: 'heren-clothing'
-            },
-            key: 'heren-clothing'
-        }
-        
-        const createPostRequest = {
-            uri: service.build(),
-            method: 'POST',
-            body,
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        }
-
-        init.client.execute(createPostRequest).then(response => {
-            if (response.statusCode == 400) {
-                reject(response)
-            }
-
-            console.log('Created a new category')
-
-            const bodyParent = {
-                version: response.body.version,
-                actions: [{
-                    action: 'changeParent',
-                    parent: {
-                        typeId: 'category',
-                        id: parentId
-                    }
-                }]
-            }
-
-            const serviceParent = init.createRequestBuilder({
-                projectKey
-            }).categories.byId(response.body.id)
-
-            const createParentPostRequest = {
-                uri: serviceParent.build(),
-                method: 'POST',
-                body: bodyParent,
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-            }
-
-            init.client.execute(createParentPostRequest).then(reseponse => {
-                if(response.statusCode == 400) {
-                    reject(response)
-                }
-
-                resolve(response.body.id)
-            });
-
-        });
-    });
+const bodyWebCategory = {
+  key: "web",
+  name: {
+    "en": "Web",
+    "en-IE": "Web"
+  },
+  slug: {
+    "en": "web"
+  },
+  description: {
+    "en": "web",
+    "en-IE": "web"
+  },
+  ancestors: [],
+  orderHint: "1",
+  externalId: "web",
+  assets: []
 }
 
-var createKidShirtCategory = (parentId) => {
-    return new Promise((resolve, reject) => {
-        const body = {
-            name: {
-                en: 'heren-shirt'
-            },
-            slug: {
-                en: 'heren-shirt'
-            },
-            key: 'heren-shirt'
-        }
-        
-        const createPostRequest = {
-            uri: service.build(),
-            method: 'POST',
-            body,
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        }
-
-        init.client.execute(createPostRequest).then(response => {
-            if (response.statusCode == 400) {
-                reject(response)
-            }
-
-            console.log('Created a new category')
-
-            const bodyParent = {
-                version: response.body.version,
-                actions: [{
-                    action: 'changeParent',
-                    parent: {
-                        typeId: 'category',
-                        id: parentId
-                    }
-                }]
-            }
-
-            const serviceParent = init.createRequestBuilder({
-                projectKey
-            }).categories.byId(response.body.id)
-
-            const createParentPostRequest = {
-                uri: serviceParent.build(),
-                method: 'POST',
-                body: bodyParent,
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-            }
-
-            init.client.execute(createParentPostRequest).then(reseponse => {
-                if(response.statusCode == 400) {
-                    reject(response)
-                }
-
-                resolve(response)
-            });
-        });
-    });
+const createWebCategoryPostRequest = {
+  uri: service.build(),
+  method: 'POST',
+  body: bodyWebCategory,
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  },
 }
 
-var createCategories = () => {
-    return new Promise((resolve,reject) => {
-        createGranfatherCategory().then(parentId => {
-            createCategory(parentId).then(parentId => {
-                createKidCategory(parentId).then(response => {
-                    if(response.statusCode == 400){
-                        reject(response)
-                    }
-                    resolve(response)
-                })
-            })
-        createCategoryShirt(parentId).then(parentId => {
-            createKidShirtCategory(parentId).then(response => {
-                if(response.statusCode == 400){
-                    reject(response)
-                }
-                resolve(response)
-            })
-        })
-        })
-    });
+async function createWebCategory() {
+  try {
+    let response = await init.client.execute(createWebCategoryPostRequest);
+    return response.body.id;
+  } catch (e) {
+    console.log(e.message);
+  }
+}
+
+
+
+async function createOpticalCategory(webCategoryId) {
+  const bodyOpticalCategory = {
+    key: "optical",
+    name: {
+      "en": "Optical",
+      "en-IE": "Optical"
+    },
+    slug: {
+      "en": "optical",
+      "en-IE": "optical"
+    },
+    description: {
+      "en": "optical",
+      "en-IE": "optical category"
+    },
+    ancestors: [{
+      typeId: "category",
+      id: webCategoryId
+    }],
+    parent: {
+      typeId: "category",
+      id: webCategoryId
+    },
+    orderHint: "1",
+    externalId: "optical",
+    metaTitle: {
+      "en": "Optical"
+    },
+    metaDescription: {
+      "en": "optical"
+    },
+    assets: []
+  }
+
+  const createOpticalCategoryPostRequest = {
+    uri: service.build(),
+    method: 'POST',
+    body: bodyOpticalCategory,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  }
+  try {
+    await init.client.execute(createOpticalCategoryPostRequest);
+  } catch (e) {
+    console.log(e.message);
+  }
+}
+
+async function createSunglassesCategory(webCategoryId) {
+  const bodySunglassesCategory = {
+    key: "sunglasses",
+    name: {
+      "en": "Sunglasses",
+      "en-IE": "Sunglasses"
+    },
+    slug: {
+      "en": "sunglasses",
+      "en-IE": "sunglasses"
+    },
+    description: {
+      "en": "sunglasses",
+      "en-IE": "Sunglasses"
+    },
+    ancestors: [{
+      typeId: "category",
+      id: webCategoryId
+    }],
+    parent: {
+      typeId: "category",
+      id: webCategoryId
+    },
+    orderHint: "1",
+    externalId: "sunglasses",
+    metaTitle: {
+      "en": "Sunglasses",
+      "en-IE": "Sun glasses"
+    },
+    metaDescription: {
+      "en": "sunglasses",
+      "en-IE": "Sun glasses"
+    },
+    assets: []
+  }
+
+  const createSunglassesCategoryPostRequest = {
+    uri: service.build(),
+    method: 'POST',
+    body: bodySunglassesCategory,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  }
+  try {
+    await init.client.execute(createSunglassesCategoryPostRequest);
+  } catch (e) {
+    console.log(e.message);
+  }
+}
+
+async function createContactLensesCategory(webCategoryId) {
+  const bodyContactLensesCategory = {
+    key: "lenses",
+    name: {
+      "en": "Contact lenses",
+      "en-IE": "Contact lenses"
+    },
+    slug: {
+      "en": "contact-lenses",
+      "en-IE": "contact-lenses"
+    },
+    description: {
+      "en": "Contact lenses",
+      "en-IE": "Contact lenses"
+    },
+    ancestors: [{
+      typeId: "category",
+      id: webCategoryId
+    }],
+    parent: {
+      typeId: "category",
+      id: webCategoryId
+    },
+    orderHint: "1",
+    externalId: "Contact lenses",
+    metaTitle: {
+      "en": "Contact lenses"
+    },
+    metaDescription: {
+      "en": "Contact lenses"
+    },
+    assets: []
+  }
+
+  const createContactLensesCategoryPostRequest = {
+    uri: service.build(),
+    method: 'POST',
+    body: bodyContactLensesCategory,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  }
+  try {
+    await init.client.execute(createContactLensesCategoryPostRequest);
+  } catch (e) {
+    console.log(e.message);
+  }
+}
+
+async function createCategories() {
+  try {
+    await createDiscountsCategory();
+    let webCategoryId = await createWebCategory();
+    await createOpticalCategory(webCategoryId);
+    await createSunglassesCategory(webCategoryId);
+    await createContactLensesCategory(webCategoryId);
+  } catch (e) {
+    console.log(e.message);
+  }
 }
 
 exports.createCategories = createCategories;

@@ -7,26 +7,15 @@ const service = init.createRequestBuilder({
     projectKey
 }).taxCategories
 
-const bodyVAT = {
-    name: 'VAT'
+const body = {
+    name: 'standard',
+    description: 'Default tax category',
+    key: 'standard'
 }
-const createPostRequestVAT = {
+const createPostRequest = {
     uri: service.build(),
     method: 'POST',
-    body: bodyVAT,
-    headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-    },
-}
-
-const bodyStandard = {
-    name: 'Standard shipping'
-}
-const createPostRequestStandard = {
-    uri: service.build(),
-    method: 'POST',
-    body: bodyStandard,
+    body: body,
     headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -36,195 +25,50 @@ const createPostRequestStandard = {
 let version = '';
 let id = '';
 
-var createTaxCategoryVAT = () => {
-    return new Promise((resolve, reject) => {
-        init.client.execute(createPostRequestVAT).then(response => {
-            console.log('Adding the VAT tax category');
-            if (response.statusCode == 400) {
-                reject(response)
+async function createTaxCategoryAsync() {
+  try {
+    let response = await init.client.execute(createPostRequest);
+
+    version = response.body.version;
+    id = response.body.id;
+
+    const service = init.createRequestBuilder({
+        projectKey
+    }).taxCategories.byId(id)
+
+    const bodyStandardRate = {
+        version: version,
+        actions: [{
+            action: 'addTaxRate',
+            taxRate: {
+                name: 'standard',
+                amount: 0.2,
+                includedInPrice: true,
+                country: 'IE',
+                state: ''
             }
+        }]
+    }
 
-            version = response.body.version;
-            id = response.body.id;
+    const createPostRequestStandardRate = {
+        uri: service.build(),
+        method: 'POST',
+        body: bodyStandardRate,
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+    }
 
-            const serviceVAT = init.createRequestBuilder({
-                projectKey
-            }).taxCategories.byId(id)
+    console.log('Adding the standard tax category rate');
 
-            const bodyVATBERate = {
-                version: version,
-                actions: [{
-                    action: 'addTaxRate',
-                    taxRate: {
-                        name: 'VAT-BE',
-                        amount: 0.21,
-                        includedInPrice: false,
-                        country: 'BE',
-                        state: ''
-                    }
-                }]
-            }
+    await init.client.execute(createPostRequestStandardRate);
+  } catch (e) {
+    console.log(e.message);
+  }
+}
 
-            const createPostRequestVATBERate = {
-                uri: serviceVAT.build(),
-                method: 'POST',
-                body: bodyVATBERate,
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-            }
-
-            console.log('Adding the VAT BE tax category rate');
-
-            init.client.execute(createPostRequestVATBERate).then((response) => {
-                if (response.statusCode == 400) {
-                    reject(response)
-                }
-
-                version = response.body.version;
-
-                const serviceVAT = init.createRequestBuilder({
-                    projectKey
-                }).taxCategories.byId(id)
-
-                const bodyVATNLRate = {
-                    version: response.body.version,
-                    actions: [{
-                        action: 'addTaxRate',
-                        taxRate: {
-                            name: 'VAT-NL',
-                            amount: 0.21,
-                            includedInPrice: false,
-                            country: 'NL',
-                            state: ''
-                        }
-                    }]
-                }
-
-                const createPostRequestVATNLRate = {
-                    uri: serviceVAT.build(),
-                    method: 'POST',
-                    body: bodyVATNLRate,
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                }
-
-                console.log('Adding the VAT NL tax category rate');
-
-                init.client.execute(createPostRequestVATNLRate).then((response) => {
-                    if (response.statusCode == 400) {
-                        reject(response)
-                    }
-
-                    resolve(response)
-                })
-            })
-
-        }).catch((error) => {
-            console.log('ERROR: ' + error.message)
-        });
-
-    });
-};
-
-var createTaxCategoryStandard = () => {
-    return new Promise((resolve, reject) => {
-
-        init.client.execute(createPostRequestStandard).then(response => {
-
-            console.log('Adding the standard tax category');
-            if (response.statusCode == 400) {
-                reject(response)
-            }
-
-            version = response.body.version;
-            id = response.body.id;
-
-            const serviceStandard = init.createRequestBuilder({
-                projectKey
-            }).taxCategories.byId(id)
-
-            const bodyStandardBERate = {
-                version: version,
-                actions: [{
-                    action: 'addTaxRate',
-                    taxRate: {
-                        name: 'Standard shipping BE',
-                        amount: 0,
-                        includedInPrice: false,
-                        country: 'BE',
-                        state: ''
-                    }
-                }]
-            }
-
-            const createPostRequestStandardBERate = {
-                uri: serviceStandard.build(),
-                method: 'POST',
-                body: bodyStandardBERate,
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-            }
-
-            console.log('Adding the standard BE tax category rate');
-
-            init.client.execute(createPostRequestStandardBERate).then((response) => {
-                if (response.statusCode == 400) {
-                    reject(response)
-                }
-
-                version = response.body.version;
-
-                const serviceStandard = init.createRequestBuilder({
-                    projectKey
-                }).taxCategories.byId(id)
-
-                const bodyStandardNLRate = {
-                    version: version,
-                    actions: [{
-                        action: 'addTaxRate',
-                        taxRate: {
-                            name: 'Standard shipping NL',
-                            amount: 0,
-                            includedInPrice: false,
-                            country: 'NL',
-                            state: ''
-                        }
-                    }]
-                }
-
-                const createPostRequestStandardNLRate = {
-                    uri: serviceStandard.build(),
-                    method: 'POST',
-                    body: bodyStandardNLRate,
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                }
-
-                console.log('Adding the standard NL tax category rate');
-
-                init.client.execute(createPostRequestStandardNLRate).then((response) => {
-                    if (response.statusCode == 400) {
-                        reject(response)
-                    }
-
-                    resolve(id)
-                })
-
-            })
-
-        }).catch((error) => {
-            console.log('ERROR: ' + error.message)
-        })
-    });
-};
+exports.createTaxCategoryAsync = createTaxCategoryAsync;
 
 const createGetRequest = {
     uri: service.build(),
@@ -235,40 +79,26 @@ const createGetRequest = {
     },
 }
 
-var getTaxCategories = () => {
-    return new Promise((resolve, reject) => {
-        init.client.execute(createGetRequest).then(response => {
-
-            if (response.statusCode == 400) {
-                reject(response)
-            }
-
-            resolve(response)
-
-        });
-
-    });
-};
-
-var getStandardTaxCategory = () => {
-    return new Promise((resolve, reject) => {
-        getTaxCategories().then((response) => {
-
-            response.body.results.forEach(element => {
-                if (element.name === 'Standard shipping') {
-                    resolve(element.id)
-                }
-            });
-
-            reject(response)
-        }).catch((error) => {
-            console.log('ERROR: ' + error.message)
-        })
-    });
+async function getTaxCategoriesAsync() {
+  try {
+    let response = await init.client.execute(createGetRequest);
+    return response;
+  } catch (e) {
+    console.log(e.message);
+  }
 }
 
-exports.getStandardTaxCategory = getStandardTaxCategory;
+async function getStandardTaxCategoryAsync() {
+  try {
+    let response = await getTaxCategoriesAsync();
+    for(let i=0; i<response.body.results.length; i++) {
+      if(response.body.results[i].name === 'standard') {
+        return response.body.results[i].id;
+      }
+    }
+  } catch (e) {
+    console.log(e.message);
+  }
+}
 
-
-exports.createTaxCategoryVAT = createTaxCategoryVAT;
-exports.createTaxCategoryStandard = createTaxCategoryStandard;
+exports.getStandardTaxCategoryAsync = getStandardTaxCategoryAsync;
